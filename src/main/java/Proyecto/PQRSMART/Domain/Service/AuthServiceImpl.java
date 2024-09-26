@@ -68,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
 
         var jwtToken = jwtService.genereteToken((UserDetails) user);
         // Enviar correo electrónico de activación
-        String activationLink1 = "http://localhost:5173/activate/"+jwtToken;
+        String activationLink1 = "https://pqrsmartfront.onrender.com/activate/"+jwtToken;
         String mensajeHtml = String.format(
                 "<h1>Hola %s %s</h1>" +
                         "<p>Gracias por iniciar el proceso de verificación de identidad en nuestra plataforma. Para completar la verificación, por favor haz clic en el siguiente enlace:" +
@@ -81,11 +81,9 @@ public class AuthServiceImpl implements AuthService {
                         "<br /><br />" +
                         "Gracias de nuevo por tu colaboración." +
                         "<br /><br />" +
-                        "Atentamente," +
                         "<br /><br />" +
-                        "Miguel Gavira<br /><br />" +
-                        "S. G PQRS<br /><br />" +
-                        "3015737613</p>",
+                        "<br /><br />" +
+                        "PQRSmart<br /><br />" ,
                 user.getName(), user.getLastName(), activationLink1
         );
 
@@ -134,7 +132,7 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
         var jwtToken = jwtService.genereteToken((UserDetails) user);
         // Enviar correo electrónico de activación
-        String activationLink1 = "http://localhost:5173/activate/"+jwtToken;
+        String activationLink1 = "https://pqrsmartfront.onrender.com/activate/"+jwtToken;
         String mensajeHtml = String.format(
                 "<h1>Hola %s %s</h1>" +
                         "<p>Gracias por iniciar el proceso de verificación de identidad en nuestra plataforma. Para completar la verificación, por favor haz clic en el siguiente enlace:" +
@@ -147,11 +145,9 @@ public class AuthServiceImpl implements AuthService {
                         "<br /><br />" +
                         "Gracias de nuevo por tu colaboración." +
                         "<br /><br />" +
-                        "Atentamente," +
                         "<br /><br />" +
-                        "Miguel Gavira<br /><br />" +
-                        "S. G PQRS<br /><br />" +
-                        "3015737613</p>",
+                        "M<br /><br />" +
+                        "PQRSmart<br /><br />",
                 user.getName(), user.getLastName(), activationLink1
         );
 
