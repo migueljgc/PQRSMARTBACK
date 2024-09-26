@@ -28,6 +28,9 @@ public class ForgotPasswordController {
 
     @PostMapping("/email")
     public ResponseEntity<String> requestPasswordReset(@RequestBody String email) {
+        try {
+
+
         User user = userService.findByEmail(email);
         if (user == null) {
             return ResponseEntity.badRequest().body("No se encontró un usuario con ese correo electrónico.");
@@ -45,7 +48,9 @@ public class ForgotPasswordController {
                 new String[]{email},
                 "Recuperación de contraseña",
                 message);
-
+        }catch (Exception e){
+            System.out.println(e);
+        }
         return ResponseEntity.ok("Se ha enviado un correo electrónico con las instrucciones para restablecer la contraseña.");
     }
 
