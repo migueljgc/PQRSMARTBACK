@@ -27,8 +27,7 @@ public class ForgotPasswordController {
 
 
     @PostMapping("/email")
-    public ResponseEntity<String> requestPasswordReset(@RequestBody Map<String, String> payload) {
-        String email=payload.get("email");
+    public ResponseEntity<String> requestPasswordReset(@RequestBody String email) {
         User user = userService.findByEmail(email);
         if (user == null) {
             return ResponseEntity.badRequest().body("No se encontró un usuario con ese correo electrónico.");
