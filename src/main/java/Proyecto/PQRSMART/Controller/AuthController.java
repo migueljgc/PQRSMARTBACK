@@ -177,19 +177,4 @@ public class AuthController {
 
     }
 
-    @PostMapping("/activate")
-    public ResponseEntity<?> recovery(@RequestBody UsuarioDto userDTO) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-
-        userDTO.setUser(username);  // Assuming the UserDTO has a user field to store the username
-        UsuarioDto updatedUser = userService.upda(userDTO);
-        return ResponseEntity.ok(updatedUser);
-    }
 }
