@@ -6,7 +6,9 @@ import Proyecto.PQRSMART.Domain.Mapper.UsuarioMapper;
 import Proyecto.PQRSMART.Persistence.Entity.StateUser;
 import Proyecto.PQRSMART.Persistence.Entity.User;
 import Proyecto.PQRSMART.Persistence.Repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,10 +16,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
 
     public List<UsuarioDto> getAll() {
@@ -60,6 +65,18 @@ public class UsuarioService {
         User user = usuarioRepository.findByUser(username);
         if (user != null){
             user.setStateUser(new StateUser(2L, "ACTIVO"));
+            usuarioRepository.save(user);
+        }
+    }
+
+    public User findByEmail(String email) {
+        return usuarioRepository.findByEmail(email) ;
+    }
+
+    public void resetPassword(String username, String newPassword) {
+        User user = usuarioRepository.findByUser(username);
+        if (user != null){
+            user.setPassword(passwordEncoder.encode(newPassword));
             usuarioRepository.save(user);
         }
     }
