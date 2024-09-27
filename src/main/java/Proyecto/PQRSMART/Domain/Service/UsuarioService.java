@@ -73,11 +73,14 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email) ;
     }
 
-    public void resetPassword(String username, String newPassword) {
-        User user = usuarioRepository.findByUser(username);
+    public void resetPassword(String email, String newPassword) {
+        User user = usuarioRepository.findByEmail(email);
         if (user != null){
             user.setPassword(passwordEncoder.encode(newPassword));
             usuarioRepository.save(user);
+        }
+        else{
+            System.out.println("Email no encontrado");
         }
     }
 }

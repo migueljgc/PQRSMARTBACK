@@ -59,10 +59,10 @@ public class ForgotPasswordController {
     @PostMapping("/reset/{token}")
     public ResponseEntity<String> resetPassword(@PathVariable String token, @RequestBody Map<String, String> payload) {
         String newPassword=payload.get("newPassword");
+        System.out.println(token);
         if (jwtService.validateTokenForPasswordReset(token)) {
-            String username = jwtService.getUserName(token);
-            userService.resetPassword(username, newPassword);
-
+            String email = jwtService.getUserName(token);
+            userService.resetPassword(email, newPassword);
             return ResponseEntity.ok("Contraseña restablecida exitosamente.");
         } else {
             return ResponseEntity.badRequest().body("El enlace de restablecimiento de contraseña es inválido o ha expirado.");
