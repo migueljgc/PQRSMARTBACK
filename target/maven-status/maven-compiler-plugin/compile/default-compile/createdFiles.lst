@@ -6,6 +6,7 @@ Proyecto\PQRSMART\Controller\AuthController.class
 Proyecto\PQRSMART\Persistence\Entity\IdentificationType.class
 Proyecto\PQRSMART\Persistence\Entity\PersonType$PersonTypeBuilder.class
 Proyecto\PQRSMART\Domain\Dto\RequestTypeDTO$RequestTypeDTOBuilder.class
+Proyecto\PQRSMART\Config\Exception\Exceptions$DependenciaAlreadyExistsException.class
 Proyecto\PQRSMART\Persistence\Repository\RequestTypeRepository.class
 Proyecto\PQRSMART\Domain\Mapper\CategoryMapper.class
 Proyecto\PQRSMART\Persistence\Entity\Request.class
@@ -19,6 +20,7 @@ Proyecto\PQRSMART\Domain\Dto\RequestTypeDTO.class
 Proyecto\PQRSMART\PqrsmartApplication.class
 Proyecto\PQRSMART\Domain\Dto\DependenceDTO$DependenceDTOBuilder.class
 Proyecto\PQRSMART\Domain\Service\EmailServiceImpl.class
+Proyecto\PQRSMART\Config\Exception\Exceptions$CategoryAlreadyExistsException.class
 Proyecto\PQRSMART\Domain\Service\UsuarioService.class
 Proyecto\PQRSMART\Config\Exception\Exceptions$UserAlreadyExistsException.class
 Proyecto\PQRSMART\Domain\Dto\PersonTypeDTO.class

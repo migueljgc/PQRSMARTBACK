@@ -29,4 +29,18 @@ public class Exceptions {
             super(message);
         }
     }
+
+    // Excepción para cuando la categoria ya existe
+    public static class CategoryAlreadyExistsException extends RuntimeException {
+        public CategoryAlreadyExistsException(String message) {
+            super(message);
+        }
+    }
+
+    // Excepción para cuando la dependencia ya existe
+    public static class DependenciaAlreadyExistsException extends RuntimeException {
+        public DependenciaAlreadyExistsException(String message) {
+            super(message);
+        }
+    }
 }

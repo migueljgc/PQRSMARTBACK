@@ -1,10 +1,13 @@
 package Proyecto.PQRSMART.Controller;
 
 
+import Proyecto.PQRSMART.Config.Exception.Exceptions;
 import Proyecto.PQRSMART.Domain.Dto.DependenceDTO;
 import Proyecto.PQRSMART.Domain.Service.DependenceService;
 import Proyecto.PQRSMART.Persistence.Entity.State;
+import Proyecto.PQRSMART.Persistence.Repository.DependenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +21,14 @@ public class DependenceController {
     private DependenceService dependenceService;
 
     @PostMapping("/save")
-    public DependenceDTO save(@RequestBody DependenceDTO dependenceDTO){
-        return dependenceService.save(dependenceDTO);
+    public ResponseEntity<?> save(@RequestBody DependenceDTO dependenceDTO){
+        try {
+            DependenceDTO saveDependence = dependenceService.save(dependenceDTO);
+            return ResponseEntity.ok(saveDependence);
+        }catch (Exceptions.DependenciaAlreadyExistsException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("La Dependencia ya existe.");
+        }
+
     }
 
     @GetMapping("/get")

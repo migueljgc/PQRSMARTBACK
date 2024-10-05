@@ -19,7 +19,7 @@ public class Dependence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDependence;
 
-    @Column(name = "Nombre_Dependencia")
+    @Column(name = "Nombre_Dependencia", unique = true)
     private String nameDependence;
 
     @ManyToOne

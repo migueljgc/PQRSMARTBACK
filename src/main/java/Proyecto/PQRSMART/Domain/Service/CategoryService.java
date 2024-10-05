@@ -1,5 +1,6 @@
 package Proyecto.PQRSMART.Domain.Service;
 
+import Proyecto.PQRSMART.Config.Exception.Exceptions;
 import Proyecto.PQRSMART.Domain.Dto.CategoryDTO;
 import Proyecto.PQRSMART.Domain.Mapper.CategoryMapper;
 import Proyecto.PQRSMART.Persistence.Repository.CategoryRepository;
@@ -15,7 +16,11 @@ public class CategoryService {
 @Autowired
     private CategoryRepository categoryRepository;
 
+
     public CategoryDTO save(CategoryDTO categoryDTO) {
+        if (categoryRepository.existsByNameCategory(categoryDTO.getNameCategory())) {
+            throw new Exceptions.CategoryAlreadyExistsException("La Categoria ya existe.");
+        }
         categoryRepository.save(CategoryMapper.toEntity(categoryDTO));
         return categoryDTO;
     }

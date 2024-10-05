@@ -1,5 +1,6 @@
 package Proyecto.PQRSMART.Domain.Service;
 
+import Proyecto.PQRSMART.Config.Exception.Exceptions;
 import Proyecto.PQRSMART.Domain.Dto.DependenceDTO;
 import Proyecto.PQRSMART.Domain.Mapper.DependenceMapper;
 import Proyecto.PQRSMART.Persistence.Repository.DependenceRepository;
@@ -16,6 +17,9 @@ public class DependenceService {
     private DependenceRepository dependenceRepository;
 
     public DependenceDTO save(DependenceDTO dependenceDTO) {
+        if (dependenceRepository.existsByNameDependence(dependenceDTO.getNameDependence())) {
+            throw new Exceptions.CategoryAlreadyExistsException("La Dependencia ya existe.");
+        }
         dependenceRepository.save(DependenceMapper.toEntity(dependenceDTO));
         return dependenceDTO;
     }
