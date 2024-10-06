@@ -49,7 +49,7 @@ public class DependenceController {
         if(dependenceDTOOptional.isPresent()) {
             DependenceDTO dependenceDTO = dependenceDTOOptional.get();
             dependenceDTO.setState(new State(2l, "DESACTIVADO"));
-            dependenceService.save(dependenceDTO);
+            dependenceService.delete(dependenceDTO);
             return ResponseEntity.ok(dependenceDTO);
         }
         return ResponseEntity.notFound().build();

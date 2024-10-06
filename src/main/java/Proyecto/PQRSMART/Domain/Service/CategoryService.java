@@ -32,4 +32,8 @@ public class CategoryService {
     public Optional<CategoryDTO> findById(Long id) {
         return categoryRepository.findById(id).map(CategoryMapper::toDTO);
     }
+    public CategoryDTO delete(CategoryDTO categoryDTO) {
+        categoryRepository.save(CategoryMapper.toEntity(categoryDTO));
+        return categoryDTO;
+    }
 }

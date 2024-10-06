@@ -51,7 +51,7 @@ public class CategoryController {
         if(categoryDTOOptional.isPresent()) {
             CategoryDTO categoryDTO = categoryDTOOptional.get();
             categoryDTO.setState(new State(2l, "DESACTIVADO"));
-            categoryService.save(categoryDTO);
+            categoryService.delete(categoryDTO);
             return ResponseEntity.ok(categoryDTO);
         }
         return ResponseEntity.notFound().build();

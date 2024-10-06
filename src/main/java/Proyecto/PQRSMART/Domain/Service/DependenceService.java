@@ -24,7 +24,7 @@ public class DependenceService {
         return dependenceDTO;
     }
     public DependenceDTO delete(DependenceDTO dependenceDTO) {
-        dependenceRepository.delete(DependenceMapper.toEntity(dependenceDTO));
+        dependenceRepository.save(DependenceMapper.toEntity(dependenceDTO));
         return dependenceDTO;
     }
 
