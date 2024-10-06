@@ -45,7 +45,7 @@ public class CategoryController {
         }
         return ResponseEntity.notFound().build();
     }
-    @PutMapping("/cancel/{id}")
+    @PatchMapping("/cancel/{id}")
     public ResponseEntity<CategoryDTO> delete(@PathVariable Long id){
         Optional<CategoryDTO> categoryDTOOptional = categoryService.findById(id);
         if(categoryDTOOptional.isPresent()) {
