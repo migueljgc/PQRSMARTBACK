@@ -58,6 +58,10 @@ public class Request {
     @Column(name = "Archivo")
     private String archivo;
 
+    @Lob
+    @Column(name = "Archivo_Respuesta")
+    private String archivoAnswer;
+
     // Método para asignar el radicado antes de persistir
     @PrePersist
     public void asignarRadicado() {
