@@ -55,12 +55,25 @@ public class UsuarioController {
     }
 
     @PatchMapping("/cancel/{id}")
-    public ResponseEntity<User> deactivarUsuario(@PathVariable Long id) {
+    public ResponseEntity<User> desactivarUsuario(@PathVariable Long id) {
         Optional<User> userOptional = usuarioService.findByIds(id);
         if (userOptional.isPresent()) {
             User usuario = userOptional.get();
             // Asignar el estado "CANCELADA" de la entidad RequestState
             usuario.setStateUser(new StateUser(3L, "DESACTIVADO"));
+            usuarioService.saves(usuario);
+            return ResponseEntity.ok(usuario);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/activate/{id}")
+    public ResponseEntity<User> activarUsuario(@PathVariable Long id) {
+        Optional<User> userOptional = usuarioService.findByIds(id);
+        if (userOptional.isPresent()) {
+            User usuario = userOptional.get();
+            // Asignar el estado "CANCELADA" de la entidad RequestState
+            usuario.setStateUser(new StateUser(2L, "ACTIVO"));
             usuarioService.saves(usuario);
             return ResponseEntity.ok(usuario);
         }
