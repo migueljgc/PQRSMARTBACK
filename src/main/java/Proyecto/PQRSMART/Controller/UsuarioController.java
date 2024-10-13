@@ -71,8 +71,9 @@ public class UsuarioController {
     public ResponseEntity<User> activarUsuario(@PathVariable Long id) {
         Optional<User> userOptional = usuarioService.findByIds(id);
         if (userOptional.isPresent()) {
+
             User usuario = userOptional.get();
-            // Asignar el estado "CANCELADA" de la entidad RequestState
+            // Asignar el estado "ACTIVO" de la entidad RequestState
             usuario.setStateUser(new StateUser(2L, "ACTIVO"));
             usuarioService.saves(usuario);
             return ResponseEntity.ok(usuario);
