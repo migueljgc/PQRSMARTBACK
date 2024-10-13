@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/Usuario/")
+@RequestMapping("/api/Usuario")
 public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
@@ -71,7 +71,7 @@ public class UsuarioController {
     public ResponseEntity<User> activarUsuario(@PathVariable Long id) {
         Optional<User> userOptional = usuarioService.findByIds(id);
         if (userOptional.isPresent()) {
-
+            System.out.println(userOptional);
             User usuario = userOptional.get();
             // Asignar el estado "ACTIVO" de la entidad RequestState
             usuario.setStateUser(new StateUser(2L, "ACTIVO"));
