@@ -1,5 +1,6 @@
 package Proyecto.PQRSMART.Domain.Dto;
 
+import Proyecto.PQRSMART.Persistence.Entity.Dependence;
 import Proyecto.PQRSMART.Persistence.Entity.Role;
 import Proyecto.PQRSMART.Persistence.Entity.StateUser;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,8 @@ public class UsuarioDto {
     private StateUser stateUser;
 
     private Role role;
+
+    private String email;
+
+    private Dependence dependence;
 }
