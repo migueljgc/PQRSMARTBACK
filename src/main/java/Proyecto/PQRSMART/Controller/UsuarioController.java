@@ -31,7 +31,7 @@ public class UsuarioController {
     @GetMapping("/get")
     public List<UsuarioDto> get(){return usuarioService.getAll();}
 
-    @PutMapping("/update")
+    @PutMapping("/Update")
     public ResponseEntity<?> update(@RequestBody UsuarioDto usuarioDto) {
         Optional<UsuarioDto> personTypeDTOOptional = usuarioService.findById(usuarioDto.getId());
         if(personTypeDTOOptional.isPresent()) {

@@ -5,6 +5,7 @@ import Proyecto.PQRSMART.Domain.Dto.UsuarioDto;
 import Proyecto.PQRSMART.Domain.Mapper.UsuarioMapper;
 import Proyecto.PQRSMART.Persistence.Entity.StateUser;
 import Proyecto.PQRSMART.Persistence.Entity.User;
+import Proyecto.PQRSMART.Persistence.Repository.StateUserRepository;
 import Proyecto.PQRSMART.Persistence.Repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class UsuarioService {
 
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private StateUserRepository stateUserRepository;
 
     public List<UsuarioDto> getAll() {
         return usuarioRepository.findAll().stream().map(UsuarioMapper::toDto).collect(Collectors.toList());
@@ -38,6 +41,12 @@ public class UsuarioService {
     }
 
     public UsuarioDto save(UsuarioDto usuarioDto) {
+        // Busca el StateUser existente en la base de datos
+        StateUser stateUser = stateUserRepository.findById(usuarioDto.getStateUser().getId())
+                .orElseThrow(() -> new IllegalArgumentException("StateUser not found"));
+
+        // Asigna el StateUser existente al usuario
+        usuarioDto.setStateUser(stateUser);
         usuarioRepository.save(UsuarioMapper.toEntity(usuarioDto));
         return usuarioDto;
     }
