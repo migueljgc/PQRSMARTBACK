@@ -1,15 +1,18 @@
+INSERT INTO `estados` VALUES (1,'ACTIVADO'),(2,'DESACTIVADO');
+INSERT INTO `estados_usuario` VALUES (1,'INACTIVO'),(2,'ACTIVO'),(3,'DESACTIVADO');
+
 -- Insertar datos en la tabla Tipos_Identificacion
-INSERT INTO Tipos_Identificacion (Nombre_Tipo_Identificacion) VALUES ('Cédula de ciudadanía');
-INSERT INTO Tipos_Identificacion (Nombre_Tipo_Identificacion) VALUES ('Cédula de extranjería');
-INSERT INTO Tipos_Identificacion (Nombre_Tipo_Identificacion) VALUES ('Numero Único de Identificación Personal (NUIP)');
-INSERT INTO Tipos_Identificacion (Nombre_Tipo_Identificacion) VALUES ('Pasaporte');
-INSERT INTO Tipos_Identificacion (Nombre_Tipo_Identificacion) VALUES ('Permiso Especial');
-INSERT INTO Tipos_Identificacion (Nombre_Tipo_Identificacion) VALUES ('Permiso por Protección Personal (PPT)');
-INSERT INTO Tipos_Identificacion (Nombre_Tipo_Identificacion) VALUES ('Numero de Identificación Tributaria (NIT)');
+INSERT INTO tipos_identificacion (Nombre_Tipo_Identificacion) VALUES ('Cédula de ciudadanía');
+INSERT INTO tipos_identificacion (Nombre_Tipo_Identificacion) VALUES ('Cédula de extranjería');
+INSERT INTO tipos_identificacion (Nombre_Tipo_Identificacion) VALUES ('Numero Único de Identificación Personal (NUIP)');
+INSERT INTO tipos_identificacion (Nombre_Tipo_Identificacion) VALUES ('Pasaporte');
+INSERT INTO tipos_identificacion (Nombre_Tipo_Identificacion) VALUES ('Permiso Especial');
+INSERT INTO tipos_identificacion (Nombre_Tipo_Identificacion) VALUES ('Permiso por Protección Personal (PPT)');
+INSERT INTO tipos_identificacion (Nombre_Tipo_Identificacion) VALUES ('Numero de Identificación Tributaria (NIT)');
 
 -- Insertar datos en la tabla Tipos_Persona
-INSERT INTO Tipos_Persona (Nombre_Tipo_Persona) VALUES ('Persona Natural');
-INSERT INTO Tipos_Persona (Nombre_Tipo_Persona) VALUES ('Persona Juridica');
+INSERT INTO tipos_persona (Nombre_Tipo_Persona) VALUES ('Persona Natural');
+INSERT INTO tipos_persona (Nombre_Tipo_Persona) VALUES ('Persona Juridica');
 
 -- Insertar datos en la tabla Tipos_Solicitud
 INSERT INTO tipos_solicitud (nombre_tipo_solicitud) values ('Peticion');
