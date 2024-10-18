@@ -187,6 +187,20 @@ System.out.println(requestJson);
         }
         return ResponseEntity.ok().build();
     }
+    @PutMapping("/rechazar/{id}")
+    public ResponseEntity<RequestDTO> rechazarSolicitud(@PathVariable Long id) {
+        Optional<RequestDTO> optionalRequest = requestServices.findById(id);
+        if (optionalRequest.isPresent()) {
+            RequestDTO request = optionalRequest.get();
+            // Asignar el estado "CANCELADA" de la entidad RequestState
+
+            Optional<RequestState> canceladoState = requestStateService.findByName("Rechazado");
+            request.setRequestState(canceladoState.get());
+            requestServices.save(request);
+            return ResponseEntity.ok(request);
+        }
+        return ResponseEntity.ok().build();
+    }
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody RequestDTO requestDTO) {
         Optional<RequestDTO> requestDTOOptional = requestServices.findById(id);
