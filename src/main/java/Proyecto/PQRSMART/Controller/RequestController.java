@@ -187,6 +187,7 @@ System.out.println(requestJson);
         }
         return ResponseEntity.ok().build();
     }
+
     @PutMapping("/rechazar/{id}")
     public ResponseEntity<RequestDTO> rechazarSolicitud(@PathVariable Long id) {
         Optional<RequestDTO> optionalRequest = requestServices.findById(id);
@@ -201,6 +202,7 @@ System.out.println(requestJson);
         }
         return ResponseEntity.ok().build();
     }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody RequestDTO requestDTO) {
         Optional<RequestDTO> requestDTOOptional = requestServices.findById(id);
@@ -209,7 +211,48 @@ System.out.println(requestJson);
             existingRequest.setRequestState(requestDTO.getRequestState());
             existingRequest.setAnswer(requestDTO.getAnswer());
             // Actualizar otros campos si es necesario
+
             RequestDTO updatedRequestDTO = requestServices.save(existingRequest); // Guardar los cambios en la solicitud existente
+            String archivoGuardado = null;
+            try{
+                UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                // Buscamos el usuario en la base de datos
+                User user = userRepository.findByUser(userDetails.getUsername());
+
+
+                if (user == null) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
+                }
+                // Generar PDF con iText
+                ByteArrayOutputStream pdfOutputStream = new ByteArrayOutputStream();
+
+                // 1. Crear el documento PDF
+                PdfWriter writer = new PdfWriter(pdfOutputStream);
+                PdfDocument pdfDoc = new PdfDocument(writer);
+                Document document = new Document(pdfDoc);
+
+                // 2. Añadir contenido al PDF
+                document.add(new Paragraph("Fecha: " + existingRequest.getDate()));
+                document.add(new Paragraph(" "));
+                document.add(new Paragraph(" "));
+                document.add(new Paragraph("Usuario: " + user.getName()));
+                document.add(new Paragraph(" "));
+                document.add(new Paragraph("Tipo de Solicitud: " + existingRequest.getRequestType().getNameRequestType()));
+                document.add(new Paragraph(" "));
+                document.add(new Paragraph("Categoría: " + existingRequest.getCategory().getNameCategory()));
+                document.add(new Paragraph(" "));
+                document.add(new Paragraph("Detalle de la Respuesta: " ));
+                document.add(new Paragraph( requestDTO.getAnswer()));
+
+                document.close();
+
+                // Enviar el PDF por correo
+                emailService.sendEmailWithPdf(user.getEmail(), "Detalle de Solicitud", "Adjunto encontrarás el PDF con los detalles de tu solicitud.", pdfOutputStream.toByteArray(), archivoGuardado);
+
+            } catch (Exception e) {
+                System.out.println(e);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo " + e.getMessage());
+            }
             return ResponseEntity.ok(updatedRequestDTO);
         }
         return ResponseEntity.notFound().build();
