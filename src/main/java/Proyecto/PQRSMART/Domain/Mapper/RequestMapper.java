@@ -21,6 +21,7 @@ public class RequestMapper {
         request.setMediumAnswer(requestDTO.getMediumAnswer());
         request.setArchivo(requestDTO.getArchivo());
         request.setArchivoAnswer(requestDTO.getArchivoAnswer());
+        request.setEvidenceAnswer(requestDTO.getEvidenceAnswer());
         return request;
     }
     public static RequestDTO toDTO(Request request) {
@@ -38,6 +39,7 @@ public class RequestMapper {
         requestDTO.setMediumAnswer(request.getMediumAnswer());
         requestDTO.setArchivo(request.getArchivo());
         requestDTO.setArchivoAnswer(request.getArchivoAnswer());
+        requestDTO.setEvidenceAnswer(request.getEvidenceAnswer());
         return requestDTO;
     }
 }

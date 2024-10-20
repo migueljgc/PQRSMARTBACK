@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -233,7 +234,7 @@ System.out.println(requestJson);
                     Files.copy(archivo.getInputStream(), targetLocation);
 
                     // Establecer la URL del archivo
-                    existingRequest.setArchivoAnswer(targetLocation.toString());
+                    existingRequest.setEvidenceAnswer(targetLocation.toString());
 
                     archivoGuardado = targetLocation.toString();  // Guardamos la ruta del archivo para el adjunto
 
@@ -242,8 +243,6 @@ System.out.println(requestJson);
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo " + e.getMessage());
                 }
             }
-
-            RequestDTO updatedRequestDTO = requestServices.save(existingRequest); // Guardar los cambios en la solicitud existente
 
             try{
                 UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -254,6 +253,16 @@ System.out.println(requestJson);
                 if (user == null) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
                 }
+                //Si la Carpeta no Existe se crea
+                //Files.createDirectories(fileStorageLocation);
+                Files.createDirectories(Paths.get(uploadDir));
+
+                // Generar un nombre único para el archivo PDF
+                String fileNameAnswer = "respuesta_" + existingRequest.getRadicado() + ".pdf";
+                String uniqueFileNameAnswer = System.currentTimeMillis() + "_" + fileNameAnswer;
+                Path targetLocationAnswer = Paths.get(uploadDir).resolve(uniqueFileNameAnswer);
+
+
                 // Generar PDF con iText
                 ByteArrayOutputStream pdfOutputStream = new ByteArrayOutputStream();
 
@@ -277,13 +286,20 @@ System.out.println(requestJson);
 
                 document.close();
 
+
+                // Guardar el archivo PDF en el servidor
+                Files.write(targetLocationAnswer, pdfOutputStream.toByteArray());
+
+
                 // Enviar el PDF por correo
                 emailService.sendEmailWithPdf(user.getEmail(), "Respuesta de solicitud  de Solicitud con Radicado: "+ existingRequest.getRadicado(), "Adjunto encontrarás el PDF con los detalles de ña respuesta de tu solicitud.", pdfOutputStream.toByteArray(), archivoGuardado);
-
+                existingRequest.setArchivoAnswer(targetLocationAnswer.toString());
             } catch (Exception e) {
                 System.out.println(e);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo " + e.getMessage());
             }
+
+            RequestDTO updatedRequestDTO = requestServices.save(existingRequest); // Guardar los cambios en la solicitud existente
             return ResponseEntity.ok(updatedRequestDTO);
         }
         return ResponseEntity.notFound().build();

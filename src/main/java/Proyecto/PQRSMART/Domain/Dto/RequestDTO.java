@@ -24,5 +24,6 @@ public class RequestDTO {
     private String archivo;
     private Long radicado = idRequest;
     private String archivoAnswer;
+    private String evidenceAnswer;
 
 }

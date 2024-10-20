@@ -51,6 +51,7 @@ public class RequestServices {
             existingRequest.setRequestState(requestDTO.getRequestState());
             existingRequest.setAnswer(requestDTO.getAnswer());
             existingRequest.setArchivoAnswer(requestDTO.getArchivoAnswer());
+            existingRequest.setEvidenceAnswer(requestDTO.getEvidenceAnswer());
             // Actualizar otros campos si es necesario
             requestRepository.save(existingRequest);
             return requestDTO;
