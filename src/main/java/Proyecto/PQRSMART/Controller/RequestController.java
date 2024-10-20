@@ -204,16 +204,47 @@ System.out.println(requestJson);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody RequestDTO requestDTO) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestPart("request") RequestDTO requestDTO, @RequestPart(value = "archivo", required = false) MultipartFile archivo) {
         Optional<RequestDTO> requestDTOOptional = requestServices.findById(id);
         if (requestDTOOptional.isPresent()) {
             RequestDTO existingRequest = requestDTOOptional.get();
             existingRequest.setRequestState(requestDTO.getRequestState());
             existingRequest.setAnswer(requestDTO.getAnswer());
             // Actualizar otros campos si es necesario
+            String archivoGuardado = null;
+            if (archivo != null && !archivo.isEmpty()) {
+                try {
+
+                    //Si la Carpeta no Existe se crea
+                    //Files.createDirectories(fileStorageLocation);
+                    Files.createDirectories(Paths.get(uploadDir));
+
+                    // Guardar el archivo
+                    String fileName = archivo.getOriginalFilename();
+                    System.out.println(fileName);
+
+                    // Generar un nombre único para el archivo (ejemplo con timestamp)
+                    String uniqueFileName = System.currentTimeMillis() + "_" + fileName;
+                    System.out.println(uniqueFileName);
+
+                    Path targetLocation = Paths.get(uploadDir).resolve(uniqueFileName);
+                    System.out.println(targetLocation);
+
+                    Files.copy(archivo.getInputStream(), targetLocation);
+
+                    // Establecer la URL del archivo
+                    existingRequest.setArchivoAnswer(targetLocation.toString());
+
+                    archivoGuardado = targetLocation.toString();  // Guardamos la ruta del archivo para el adjunto
+
+                } catch (IOException e) {
+                    System.out.println(e);
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo " + e.getMessage());
+                }
+            }
 
             RequestDTO updatedRequestDTO = requestServices.save(existingRequest); // Guardar los cambios en la solicitud existente
-            String archivoGuardado = null;
+
             try{
                 UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                 // Buscamos el usuario en la base de datos
@@ -247,7 +278,7 @@ System.out.println(requestJson);
                 document.close();
 
                 // Enviar el PDF por correo
-                emailService.sendEmailWithPdf(user.getEmail(), "Detalle de Solicitud", "Adjunto encontrarás el PDF con los detalles de tu solicitud.", pdfOutputStream.toByteArray(), archivoGuardado);
+                emailService.sendEmailWithPdf(user.getEmail(), "Respuesta de solicitud  de Solicitud con Radicado: "+ existingRequest.getRadicado(), "Adjunto encontrarás el PDF con los detalles de ña respuesta de tu solicitud.", pdfOutputStream.toByteArray(), archivoGuardado);
 
             } catch (Exception e) {
                 System.out.println(e);
@@ -257,6 +288,61 @@ System.out.println(requestJson);
         }
         return ResponseEntity.notFound().build();
     }
+
+//    @PutMapping("/update/{id}")
+//    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody RequestDTO requestDTO) {
+//        Optional<RequestDTO> requestDTOOptional = requestServices.findById(id);
+//        if (requestDTOOptional.isPresent()) {
+//            RequestDTO existingRequest = requestDTOOptional.get();
+//            existingRequest.setRequestState(requestDTO.getRequestState());
+//            existingRequest.setAnswer(requestDTO.getAnswer());
+//            // Actualizar otros campos si es necesario
+//
+//            RequestDTO updatedRequestDTO = requestServices.save(existingRequest); // Guardar los cambios en la solicitud existente
+//            String archivoGuardado = null;
+//            try{
+//                UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//                // Buscamos el usuario en la base de datos
+//                User user = userRepository.findByUser(userDetails.getUsername());
+//
+//
+//                if (user == null) {
+//                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
+//                }
+//                // Generar PDF con iText
+//                ByteArrayOutputStream pdfOutputStream = new ByteArrayOutputStream();
+//
+//                // 1. Crear el documento PDF
+//                PdfWriter writer = new PdfWriter(pdfOutputStream);
+//                PdfDocument pdfDoc = new PdfDocument(writer);
+//                Document document = new Document(pdfDoc);
+//
+//                // 2. Añadir contenido al PDF
+//                document.add(new Paragraph("Fecha: " + existingRequest.getDate()));
+//                document.add(new Paragraph(" "));
+//                document.add(new Paragraph(" "));
+//                document.add(new Paragraph("Usuario: " + user.getName()));
+//                document.add(new Paragraph(" "));
+//                document.add(new Paragraph("Tipo de Solicitud: " + existingRequest.getRequestType().getNameRequestType()));
+//                document.add(new Paragraph(" "));
+//                document.add(new Paragraph("Categoría: " + existingRequest.getCategory().getNameCategory()));
+//                document.add(new Paragraph(" "));
+//                document.add(new Paragraph("Detalle de la Respuesta: " ));
+//                document.add(new Paragraph( requestDTO.getAnswer()));
+//
+//                document.close();
+//
+//                // Enviar el PDF por correo
+//                emailService.sendEmailWithPdf(user.getEmail(), "Detalle de Solicitud", "Adjunto encontrarás el PDF con los detalles de tu solicitud.", pdfOutputStream.toByteArray(), archivoGuardado);
+//
+//            } catch (Exception e) {
+//                System.out.println(e);
+//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo " + e.getMessage());
+//            }
+//            return ResponseEntity.ok(updatedRequestDTO);
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
 
     @GetMapping("/download/{filename}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {

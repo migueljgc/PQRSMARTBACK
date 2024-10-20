@@ -50,6 +50,7 @@ public class RequestServices {
             // Actualizar los campos relevantes de la solicitud existente con los valores de requestDTO
             existingRequest.setRequestState(requestDTO.getRequestState());
             existingRequest.setAnswer(requestDTO.getAnswer());
+            existingRequest.setArchivoAnswer(requestDTO.getArchivoAnswer());
             // Actualizar otros campos si es necesario
             requestRepository.save(existingRequest);
             return requestDTO;

@@ -23,5 +23,6 @@ public class RequestDTO {
     private String mediumAnswer;
     private String archivo;
     private Long radicado = idRequest;
+    private String archivoAnswer;
 
 }
