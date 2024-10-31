@@ -84,6 +84,7 @@ Proyecto\PQRSMART\Domain\Dto\CategoryDTO$CategoryDTOBuilder.class
 Proyecto\PQRSMART\Persistence\Repository\IdentificationTypeRepository.class
 Proyecto\PQRSMART\Persistence\Entity\IdentificationType$IdentificationTypeBuilder.class
 Proyecto\PQRSMART\Controller\RequestStateController.class
+Proyecto\PQRSMART\Persistence\Repository\StateUserRepository.class
 Proyecto\PQRSMART\Controller\models\AuthenticationRequest.class
 Proyecto\PQRSMART\Controller\models\AuthResponse.class
 Proyecto\PQRSMART\Domain\Service\AuthServiceImpl.class
