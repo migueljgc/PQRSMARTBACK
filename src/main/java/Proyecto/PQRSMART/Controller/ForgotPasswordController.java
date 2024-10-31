@@ -42,7 +42,7 @@ public class ForgotPasswordController {
         String token = jwtService.genereteTokenEmail(user.getEmail());
 
         // Construir el enlace para restablecer la contraseña
-        String resetLink = "https://pqrsmartfront.onrender.com/reset-password/" + token;
+        String resetLink = "https://pqrsmart.netlify.app/reset-password/" + token;
 
         // Enviar correo electrónico con el enlace de restablecimiento
         String message = String.format("<h1>Para restablecer tu contraseña, haz clic en este enlace: <h1/>" + "<a href=\"%s\">Restablecer Contraseña</a>",resetLink );

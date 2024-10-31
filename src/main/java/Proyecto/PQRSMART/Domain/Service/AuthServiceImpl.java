@@ -132,7 +132,7 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
         var jwtToken = jwtService.genereteToken((UserDetails) user);
         // Enviar correo electrónico de activación
-        String activationLink1 = "http://localhost:5173/activate/"+jwtToken;
+        String activationLink1 = "https://pqrsmart.netlify.app/activate/"+jwtToken;
         String mensajeHtml = String.format(
                 "<h1>Hola %s %s</h1>" +
                         "<p>Gracias por iniciar el proceso de verificación de identidad en nuestra plataforma. Para completar la verificación, por favor haz clic en el siguiente enlace:" +
