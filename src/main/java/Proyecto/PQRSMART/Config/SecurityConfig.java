@@ -45,10 +45,11 @@ import java.util.List;
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://pqrsmart.netlify.app/")); // Reemplaza con la URL de tu frontend
+        configuration.setAllowedOrigins(List.of("https://pqrsmart.netlify.app")); // Reemplaza con la URL de tu frontend
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+
 
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
