@@ -1,5 +1,6 @@
 package Proyecto.PQRSMART.Domain.Service;
 
+import Proyecto.PQRSMART.Persistence.Entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -91,4 +92,32 @@ public class JwtService {
                 .signWith(getSingInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
+    public String genereteTokenCambioEmail(Long userId, String newEmail){
+        return Jwts.builder()
+                .claim("newEmail", newEmail)
+                .setSubject(userId.toString())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() * 1000 * 60 *60 *24))
+                .signWith(getSingInKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+    public Map<String, Object> extractClaimsFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSingInKey()) // Usa la misma clave de firma que se usó al crear el token
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        // Extraer el userId desde el subject y el newEmail desde el claim
+        String userId = claims.getSubject();
+        String newEmail = (String) claims.get("newEmail");
+
+        Map<String, Object> extractedValues = new HashMap<>();
+        extractedValues.put("userId", Long.parseLong(userId));
+        extractedValues.put("newEmail", newEmail);
+
+        return extractedValues;
+    }
+
 }

@@ -1,6 +1,7 @@
 package Proyecto.PQRSMART.Domain.Service;
 
 
+import Proyecto.PQRSMART.Config.Exception.Exceptions;
 import Proyecto.PQRSMART.Domain.Dto.UsuarioDto;
 import Proyecto.PQRSMART.Domain.Mapper.UsuarioMapper;
 import Proyecto.PQRSMART.Persistence.Entity.StateUser;
@@ -24,6 +25,11 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final EmailServiceImpl emailService;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Autowired
     private StateUserRepository stateUserRepository;
@@ -51,6 +57,13 @@ public class UsuarioService {
         return usuarioDto;
     }
 
+    public User saveCorreo(User usuario) {
+
+        usuarioRepository.save(usuario);
+
+        return usuario;
+    }
+
     public User saves(User usuario) {
         usuarioRepository.save(usuario);
         return usuario;
@@ -71,6 +84,7 @@ public class UsuarioService {
 
 
     public void verifyUser(String username) {
+
         User user = usuarioRepository.findByUser(username);
         if (user != null){
             user.setStateUser(new StateUser(2L, "ACTIVO"));
@@ -82,6 +96,8 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email) ;
     }
 
+
+
     public void resetPassword(String email, String newPassword) {
         User user = usuarioRepository.findByEmail(email);
         if (user != null){
@@ -91,5 +107,10 @@ public class UsuarioService {
         else{
             System.out.println("Email no encontrado");
         }
+    }
+
+    public boolean existsByEmail(String email) {
+        // Verificar si el email ya existe
+        return usuarioRepository.existsByEmail(email) ;
     }
 }

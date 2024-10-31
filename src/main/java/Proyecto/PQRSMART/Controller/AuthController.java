@@ -8,6 +8,7 @@ import Proyecto.PQRSMART.Domain.Dto.UsuarioDto;
 import Proyecto.PQRSMART.Domain.Service.AuthService;
 import Proyecto.PQRSMART.Domain.Service.JwtService;
 import Proyecto.PQRSMART.Domain.Service.UsuarioService;
+import Proyecto.PQRSMART.Persistence.Entity.StateUser;
 import Proyecto.PQRSMART.Persistence.Entity.User;
 import Proyecto.PQRSMART.Persistence.Repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -175,6 +179,35 @@ public class AuthController {
             return ResponseEntity.internalServerError().body("error"+e);
         }
 
+    }
+
+    @PutMapping("/activate-email")
+    public ResponseEntity<String> activateEmail(@RequestParam("token") String token) {
+        try {
+            // Extraer los valores desde el token
+            Map<String, Object> extractedValues = jwtService.extractClaimsFromToken(token);
+            Long userId = (Long) extractedValues.get("userId");
+            String newEmail = (String) extractedValues.get("newEmail");
+
+            // Buscar el usuario por su ID
+            Optional<User> optionalUser = userService.findByIds(userId);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+
+                // Actualizar el correo y el estado
+                user.setEmail(newEmail);
+                user.setStateUser(new StateUser(2L,"ACTIVO") ); // Puedes cambiar este valor según tu lógica
+
+                // Guardar cambios en la base de datos
+                userService.saves(user);
+
+                return ResponseEntity.ok("Email actualizado y usuario activado.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token inválido o expirado.");
+        }
     }
 
 }
