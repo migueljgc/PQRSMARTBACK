@@ -45,17 +45,17 @@ import java.util.List;
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://pqrsmart.netlify.app")); // Reemplaza con la URL de tu frontend
+        configuration.setAllowedOrigins(List.of("https://pqrsmart.netlify.app")); // URL de tu frontend
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
-
-
+        configuration.setAllowedHeaders(List.of("*")); // Permitir todos los headers
+        configuration.setAllowCredentials(true); // Permitir el uso de credenciales (cookies, headers de autorización, etc.)
+        configuration.setExposedHeaders(List.of("Authorization", "Content-Type", "Accept"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
     private RequestMatcher publicEndpoinds(){
         return new OrRequestMatcher(
           new AntPathRequestMatcher("/api/greeting/sayHelloPublic"),
