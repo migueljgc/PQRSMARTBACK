@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://root:xTiaDAEBoWndxzXOJJzHpwfbHGlmcIWn@autorack.proxy.rlwy.net:46907/railway
+    url: jdbc:mysql://root:zhuGkAELGrSGyOWThIBhOCRspnIxYYJV@autorack.proxy.rlwy.net:30394/railway
     username: root
-    password: xTiaDAEBoWndxzXOJJzHpwfbHGlmcIWn
+    password: zhuGkAELGrSGyOWThIBhOCRspnIxYYJV
     driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:
