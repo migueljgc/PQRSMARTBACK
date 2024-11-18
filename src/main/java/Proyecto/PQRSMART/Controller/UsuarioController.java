@@ -46,7 +46,8 @@ public class UsuarioController {
     public ResponseEntity<?> update(@RequestBody UsuarioDto usuarioDto) {
         Optional<UsuarioDto> personTypeDTOOptional = usuarioService.findById(usuarioDto.getId());
         if(personTypeDTOOptional.isPresent()) {
-            usuarioService.save(usuarioDto);
+            System.out.println(usuarioDto);
+            usuarioService.update(usuarioDto);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();

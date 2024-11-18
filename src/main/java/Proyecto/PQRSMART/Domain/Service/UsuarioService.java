@@ -113,4 +113,28 @@ public class UsuarioService {
         // Verificar si el email ya existe
         return usuarioRepository.existsByEmail(email) ;
     }
+
+    public UsuarioDto update(UsuarioDto usuarioDto) {
+        System.out.println(usuarioDto);
+// Busca el usuario existente en la base de datos para validar
+        User usuario = usuarioRepository.findById(usuarioDto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        // Busca el StateUser existente en la base de datos
+        StateUser stateUser = stateUserRepository.findById(usuarioDto.getStateUser().getId())
+                .orElseThrow(() -> new IllegalArgumentException("StateUser not found"));
+
+        // Asigna el StateUser existente al usuario
+        usuarioDto.setStateUser(stateUser);
+        // Asigna los nuevos valores al UsuarioDto
+        usuario.setName(usuarioDto.getName());
+        usuario.setLastName(usuarioDto.getLastName());
+        usuario.setEmail(usuarioDto.getEmail());
+        usuario.setRole(usuarioDto.getRole());
+        usuario.setDependence(usuarioDto.getDependence());
+        System.out.println(usuario);
+        usuarioRepository.save(usuario);
+        // Devuelve el DTO actualizado (opcional, dependiendo de tus necesidades)
+        return UsuarioMapper.toDto(usuario);
+    }
 }
