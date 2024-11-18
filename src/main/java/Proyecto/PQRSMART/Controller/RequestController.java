@@ -5,11 +5,8 @@ import Proyecto.PQRSMART.Domain.Dto.RequestDTO;
 import Proyecto.PQRSMART.Domain.Service.EmailServiceImpl;
 import Proyecto.PQRSMART.Domain.Service.RequestServices;
 import Proyecto.PQRSMART.Domain.Service.RequestStateService;
-import Proyecto.PQRSMART.Persistence.Entity.Request;
-import Proyecto.PQRSMART.Persistence.Entity.RequestState;
-import Proyecto.PQRSMART.Persistence.Entity.User;
-import Proyecto.PQRSMART.Persistence.Repository.RequestRepository;
-import Proyecto.PQRSMART.Persistence.Repository.UsuarioRepository;
+import Proyecto.PQRSMART.Persistence.Entity.*;
+import Proyecto.PQRSMART.Persistence.Repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -43,14 +40,22 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/api/request")
 public class RequestController {
+
     @Autowired
     private RequestServices requestServices;
-    @Autowired
-    private RequestRepository requestRepository;
+
     @Autowired
     private UsuarioRepository userRepository;
     @Autowired
+    private DependenceRepository dependenceRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
     private RequestStateService requestStateService;
+    @Autowired
+    private RequestStateRepository requestStateRepository;
+    @Autowired
+    private RequestTypeRepository requestTypeRepository;
 
     private final EmailServiceImpl emailService;
 
@@ -67,7 +72,7 @@ public class RequestController {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         // Buscamos el usuario en la base de datos
         User user = userRepository.findByUser(userDetails.getUsername());
-        System.out.println(request);
+
 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
@@ -108,10 +113,17 @@ public class RequestController {
 
         // Guardar solicitud usando el servicio
         RequestDTO savedRequest;
-        RequestDTO searchRequest;
+        Dependence dependence;
+        Category category;
+        RequestState requestState;
+        RequestType requestType;
+
         try {
             savedRequest = requestServices.saves(request);
-
+            dependence= dependenceRepository.findById(savedRequest.getDependence().getIdDependence()).orElseThrow(() -> new IllegalArgumentException("Id no encontrado"));
+            category= categoryRepository.findById(savedRequest.getCategory().getIdCategory()).orElseThrow(() -> new IllegalArgumentException("Id no encontrado"));
+            requestState= requestStateRepository.findById(savedRequest.getRequestState().getIdRequestState()).orElseThrow(() -> new IllegalArgumentException("Id no encontrado"));
+            requestType= requestTypeRepository.findById(savedRequest.getRequestType().getIdRequestType()).orElseThrow(() -> new IllegalArgumentException("Id no encontrado"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar la solicitud");
         }
@@ -133,14 +145,16 @@ public class RequestController {
                 document.add(new Paragraph(" "));
                 document.add(new Paragraph("Usuario: " + user.getName()));
                 document.add(new Paragraph(" "));
-                document.add(new Paragraph("Tipo de Solicitud: " + savedRequest.getRequestType().getNameRequestType()));
+                document.add(new Paragraph("Tipo de Solicitud: " + requestType.getNameRequestType()));
+            document.add(new Paragraph(" "));
+            document.add(new Paragraph("Dependencia: " + dependence.getNameDependence()));
                 document.add(new Paragraph(" "));
-                document.add(new Paragraph("Categoría: " + savedRequest.getCategory().getNameCategory()));
+                document.add(new Paragraph("Categoría: " + category.getNameCategory()));
                 document.add(new Paragraph(" "));
                 document.add(new Paragraph("Detalle de la Solicitud: " ));
                 document.add(new Paragraph( request.getDescription()));
                 document.add(new Paragraph(" "));
-                document.add(new Paragraph("Estado Actual de la Solicitud: " + savedRequest.getRequestState().getNameRequestState()));
+                document.add(new Paragraph("Estado Actual de la Solicitud: " + requestState.getNameRequestState()));
 
                 document.close();
 
@@ -163,11 +177,11 @@ public class RequestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al convertir a JSON");
         }
 
-
-System.out.println(requestJson);
         // Devolver respuesta HTTP con estado 201 (creado)
         return ResponseEntity.status(HttpStatus.CREATED).body(requestJson);
     }
+
+
 
     @GetMapping("/get")
     public List<RequestDTO> get() {

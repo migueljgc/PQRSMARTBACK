@@ -4,8 +4,10 @@ package Proyecto.PQRSMART.Domain.Service;
 import Proyecto.PQRSMART.Config.Exception.Exceptions;
 import Proyecto.PQRSMART.Domain.Dto.UsuarioDto;
 import Proyecto.PQRSMART.Domain.Mapper.UsuarioMapper;
+import Proyecto.PQRSMART.Persistence.Entity.Dependence;
 import Proyecto.PQRSMART.Persistence.Entity.StateUser;
 import Proyecto.PQRSMART.Persistence.Entity.User;
+import Proyecto.PQRSMART.Persistence.Repository.DependenceRepository;
 import Proyecto.PQRSMART.Persistence.Repository.StateUserRepository;
 import Proyecto.PQRSMART.Persistence.Repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,9 @@ public class UsuarioService {
 
     @Autowired
     private StateUserRepository stateUserRepository;
+
+    @Autowired
+    private DependenceRepository dependenceRepository;
 
     public List<UsuarioDto> getAll() {
         return usuarioRepository.findAll().stream().map(UsuarioMapper::toDto).collect(Collectors.toList());
@@ -131,8 +136,12 @@ public class UsuarioService {
         usuario.setLastName(usuarioDto.getLastName());
         usuario.setEmail(usuarioDto.getEmail());
         usuario.setRole(usuarioDto.getRole());
-        usuario.setDependence(usuarioDto.getDependence());
-        System.out.println(usuario);
+        Optional<Dependence> dependence = dependenceRepository.findById(usuarioDto.getDependence().getIdDependence());
+        if(dependence.isPresent()){
+            usuario.setDependence(dependence.get());
+            System.out.println(usuario);
+        };
+
         usuarioRepository.save(usuario);
         // Devuelve el DTO actualizado (opcional, dependiendo de tus necesidades)
         return UsuarioMapper.toDto(usuario);

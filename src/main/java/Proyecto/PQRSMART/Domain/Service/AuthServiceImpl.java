@@ -146,7 +146,7 @@ public class AuthServiceImpl implements AuthService {
                         "Gracias de nuevo por tu colaboración." +
                         "<br /><br />" +
                         "<br /><br />" +
-                        "M<br /><br />" +
+                        "<br /><br />" +
                         "PQRSmart<br /><br />",
                 user.getName(), user.getLastName(), activationLink1
         );
